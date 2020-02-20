@@ -22,18 +22,20 @@ function Card(props) {
 		}
 	}, [])
 	return (
-		<div className="card">
-			<img src={image} className="mx-auto d-block" alt="" />
-			<div className="card-body">
-				<h2 className="card-title h5 text-center">
-					{_.startCase(props.slug)}
-				</h2>
-				<Link
-					className="btn btn-primary btn-block"
-					to={`/${props.slug}/`}
-				>
-					Detail
-				</Link>
+		<div className="m-2">
+			<div className="card" style={props.style}>
+				<img src={image} className="mx-auto d-block" alt="" />
+				<div className="card-body">
+					<h2 className="card-title h5 text-center">
+						{_.startCase(props.slug)}
+					</h2>
+					<Link
+						className="btn btn-primary btn-block"
+						to={`/${props.slug}/`}
+					>
+						Detail
+					</Link>
+				</div>
 			</div>
 		</div>
 	)

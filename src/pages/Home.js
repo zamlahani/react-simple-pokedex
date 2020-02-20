@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react"
 import axios from "axios"
 import _ from "lodash"
+import InfiniteScroll from "react-infinite-scroll-component"
+import Columned from "react-columned"
 import Card from "../components/Card"
 import Header from "../components/Header"
 import loading from "../loading-image.svg"
@@ -8,6 +10,7 @@ import loading from "../loading-image.svg"
 const Home = () => {
 	const [options, setOptions] = useState([{ label: "All", value: "" }])
 	const [pokemons, setPokemons] = useState([])
+	const [nextUrl, setNextUrl] = useState("")
 	const [type, setType] = useState("")
 	const [isLoading, setLoading] = useState(true)
 	const Options = () => {
@@ -15,15 +18,13 @@ const Home = () => {
 			return <Option key={i} value={option.value} label={option.label} />
 		})
 	}
-	const Cards = () => {
-		return pokemons.map((pokemon, i) => {
-			return (
-				<Card
-					key={i}
-					slug={pokemon.slug}
-					name={_.startCase(pokemon.slug)}
-				/>
-			)
+	const fetchPokemon = () => {
+		axios.get(nextUrl).then(res => {
+			let retreivedPokemons = res.data.results.map(result => {
+				return { slug: result.name }
+			})
+			setPokemons(poks => [...poks, ...retreivedPokemons])
+			setNextUrl(res.data.next)
 		})
 	}
 	useEffect(() => {
@@ -45,12 +46,13 @@ const Home = () => {
 				setLoading(false)
 			})
 		} else {
-			axios.get("https://pokeapi.co/api/v2/pokemon").then(res => {
+			axios.get("https://pokeapi.co/api/v2/pokemon?limit=9").then(res => {
 				let retreivedPokemons = res.data.results.map(result => {
 					return { slug: result.name }
 				})
 				setPokemons([...retreivedPokemons])
 				setLoading(false)
+				setNextUrl(res.data.next)
 			})
 		}
 	}, [type])
@@ -86,8 +88,24 @@ const Home = () => {
 							/>
 						</div>
 					) : (
-						<div className="card-columns pt-3">
-							<Cards />
+						<div className="pt-3 mx-n2">
+							<InfiniteScroll
+								dataLength={pokemons.length}
+								next={fetchPokemon}
+								hasMore={true}
+							>
+								<Columned>
+									{pokemons.map((pokemon, i) => {
+										return (
+											<Card
+												key={i}
+												slug={pokemon.slug}
+												name={_.startCase(pokemon.slug)}
+											/>
+										)
+									})}
+								</Columned>
+							</InfiniteScroll>
 						</div>
 					)}
 				</div>
