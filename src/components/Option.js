@@ -1,7 +1,7 @@
 import React from "react"
 
 function Option(props) {
-	return <option>{props.value}</option>
+	return <option value={props.value}>{props.label}</option>
 }
 
 export default Option
