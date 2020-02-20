@@ -7,9 +7,23 @@ import Option from "../components/Option"
 
 const Home = () => {
 	const [options, setOptions] = useState([{ label: "All", value: "" }])
+	const [pokemons, setPokemons] = useState([])
+	const [type, setType] = useState("")
+	const [loading, setLoading] = useState(true)
 	const Options = () => {
 		return options.map((option, i) => {
 			return <Option key={i} value={option.value} label={option.label} />
+		})
+	}
+	const Cards = () => {
+		return pokemons.map((pokemon, i) => {
+			return (
+				<Card
+					key={i}
+					slug={pokemon.slug}
+					name={_.startCase(pokemon.slug)}
+				/>
+			)
 		})
 	}
 	useEffect(() => {
@@ -20,6 +34,30 @@ const Home = () => {
 			setOptions(o => [...o, ...newOptions])
 		})
 	}, [])
+	useEffect(() => {
+		setLoading(true)
+		if (type !== "") {
+			axios.get(`https://pokeapi.co/api/v2/type/${type}`).then(res => {
+				console.log("1st then")
+				let retreivedPokemons = res.data.pokemon.map(pokemon => {
+					return { slug: pokemon.pokemon.name }
+				})
+				setPokemons([...retreivedPokemons])
+				setLoading(false)
+			})
+		} else {
+			axios.get("https://pokeapi.co/api/v2/pokemon").then(res => {
+				let retreivedPokemons = res.data.results.map(result => {
+					return { slug: result.name }
+				})
+				setPokemons([...retreivedPokemons])
+				setLoading(false)
+			})
+		}
+	}, [type])
+	const handleSelect = e => {
+		setType(e.target.value)
+	}
 	return (
 		<div className="homePage">
 			<Header />
@@ -29,17 +67,17 @@ const Home = () => {
 						<label htmlFor="filter" className="mr-2">
 							Type
 						</label>
-						<select className="form-control" id="filter">
+						<select
+							value={type}
+							className="form-control"
+							id="filter"
+							onChange={handleSelect}
+						>
 							<Options />
 						</select>
 					</form>
 					<div className="card-columns pt-3">
-						<Card />
-						<Card />
-						<Card />
-						<Card />
-						<Card />
-						<Card />
+						{loading ? "Loading..." : <Cards />}
 					</div>
 				</div>
 			</main>
