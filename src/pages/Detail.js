@@ -50,8 +50,10 @@ const Detail = () => {
 		<div>
 			<Header />
 			<main className="container">
-				{image.length > 0 ? (
+				{image ? (
 					<img src={image} alt="" className="d-block mx-auto" />
+				) : image === null ? (
+					""
 				) : (
 					<BigSpinner />
 				)}
@@ -61,7 +63,7 @@ const Detail = () => {
 						<SmallSpinner />
 					</div>
 				) : (
-					<div>
+					<div className="pt-3">
 						<h1>{_.startCase(pokemon.name)}</h1>
 						<div className="row">
 							<div className="col-sm pt-3">

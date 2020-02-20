@@ -23,8 +23,10 @@ function Card(props) {
 	return (
 		<div className="m-2">
 			<div className="card" style={props.style}>
-				{image.length > 0 ? (
+				{image ? (
 					<img src={image} className="mx-auto d-block" alt="" />
+				) : image === null ? (
+					""
 				) : (
 					<BigSpinner />
 				)}
