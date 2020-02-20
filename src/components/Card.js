@@ -13,7 +13,6 @@ function Card(props) {
 				cancelToken: source.token,
 			})
 			.then(res => {
-				//console.log(res.data.sprites)
 				setImage(res.data.sprites.front_default)
 			})
 			.catch(function(error) {})

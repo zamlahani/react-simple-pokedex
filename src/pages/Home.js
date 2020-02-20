@@ -10,6 +10,7 @@ import loading from "../loading-image.svg"
 const Home = () => {
 	const [options, setOptions] = useState([{ label: "All", value: "" }])
 	const [pokemons, setPokemons] = useState([])
+	const [filteredPokemons, setFilteredPokemons] = useState([])
 	const [nextUrl, setNextUrl] = useState("")
 	const [type, setType] = useState("")
 	const [isLoading, setLoading] = useState(true)
@@ -19,13 +20,17 @@ const Home = () => {
 		})
 	}
 	const fetchPokemon = () => {
-		axios.get(nextUrl).then(res => {
-			let retreivedPokemons = res.data.results.map(result => {
-				return { slug: result.name }
+		if (type === "") {
+			axios.get(nextUrl).then(res => {
+				let retreivedPokemons = res.data.results.map(result => {
+					return { slug: result.name }
+				})
+				setPokemons(poks => [...poks, ...retreivedPokemons])
+				setNextUrl(res.data.next)
 			})
-			setPokemons(poks => [...poks, ...retreivedPokemons])
-			setNextUrl(res.data.next)
-		})
+		} else {
+			setPokemons(poks => filteredPokemons.slice(0, 20 + poks.length))
+		}
 	}
 	useEffect(() => {
 		axios.get("https://pokeapi.co/api/v2/type").then(res => {
@@ -42,11 +47,12 @@ const Home = () => {
 				let retreivedPokemons = res.data.pokemon.map(pokemon => {
 					return { slug: pokemon.pokemon.name }
 				})
-				setPokemons([...retreivedPokemons])
+				setPokemons(retreivedPokemons.slice(0, 20))
+				setFilteredPokemons([...retreivedPokemons])
 				setLoading(false)
 			})
 		} else {
-			axios.get("https://pokeapi.co/api/v2/pokemon?limit=9").then(res => {
+			axios.get("https://pokeapi.co/api/v2/pokemon").then(res => {
 				let retreivedPokemons = res.data.results.map(result => {
 					return { slug: result.name }
 				})
