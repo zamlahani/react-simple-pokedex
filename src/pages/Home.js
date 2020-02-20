@@ -14,11 +14,7 @@ const Home = () => {
 	const [nextUrl, setNextUrl] = useState("")
 	const [type, setType] = useState("")
 	const [isLoading, setLoading] = useState(true)
-	const Options = () => {
-		return options.map((option, i) => {
-			return <Option key={i} value={option.value} label={option.label} />
-		})
-	}
+
 	const fetchPokemon = () => {
 		if (type === "") {
 			axios.get(nextUrl).then(res => {
@@ -85,7 +81,15 @@ const Home = () => {
 							id="filter"
 							onChange={handleSelect}
 						>
-							<Options />
+							{options.map((option, i) => {
+								return (
+									<Option
+										key={i}
+										value={option.value}
+										label={option.label}
+									/>
+								)
+							})}
 						</select>
 					</form>
 					<div className="pt-3">
