@@ -3,11 +3,12 @@ import axios from "axios"
 import _ from "lodash"
 import { useParams } from "react-router-dom"
 import Header from "../components/Header"
-import loading from "../loading-image.svg"
+import SmallSpinner from "../components/SmallSpinner"
+import BigSpinner from "../components/BigSpinner"
 
 const Detail = () => {
 	let { pokemonSlug } = useParams()
-	const [image, setImage] = useState(loading)
+	const [image, setImage] = useState("")
 	const [pokemon, setPokemon] = useState({})
 	const [abilitiesString, setAbilities] = useState("")
 	const [typesString, setTypesString] = useState("")
@@ -49,16 +50,15 @@ const Detail = () => {
 		<div>
 			<Header />
 			<main className="container">
-				<img src={image} alt="" className="d-block mx-auto" />
+				{image.length > 0 ? (
+					<img src={image} alt="" className="d-block mx-auto" />
+				) : (
+					<BigSpinner />
+				)}
 				{_.isEmpty(pokemon) ? (
 					<div className="pt-3">
-						Loading...
-						<img
-							src={loading}
-							width="25"
-							height="25"
-							alt="Loading placeholder"
-						/>
+						Loading...&nbsp;
+						<SmallSpinner />
 					</div>
 				) : (
 					<div>

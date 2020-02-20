@@ -5,7 +5,7 @@ import InfiniteScroll from "react-infinite-scroll-component"
 import Columned from "react-columned"
 import Card from "../components/Card"
 import Header from "../components/Header"
-import loading from "../loading-image.svg"
+import SmallSpinner from "../components/SmallSpinner"
 
 const Home = () => {
 	const [options, setOptions] = useState([{ label: "All", value: "" }])
@@ -44,12 +44,17 @@ const Home = () => {
 		setLoading(true)
 		if (type !== "") {
 			axios.get(`https://pokeapi.co/api/v2/type/${type}`).then(res => {
-				let retreivedPokemons = res.data.pokemon.map(pokemon => {
-					return { slug: pokemon.pokemon.name }
-				})
-				setFilteredPokemons([...retreivedPokemons])
-				setPokemons(retreivedPokemons.slice(0, 20))
-				setLoading(false)
+				if (res.data.pokemon.length > 0) {
+					let retreivedPokemons = res.data.pokemon.map(pokemon => {
+						return { slug: pokemon.pokemon.name }
+					})
+					setFilteredPokemons([...retreivedPokemons])
+					setPokemons(retreivedPokemons.slice(0, 20))
+					setLoading(false)
+				} else {
+					setPokemons([])
+					setLoading(false)
+				}
 			})
 		} else {
 			axios.get("https://pokeapi.co/api/v2/pokemon").then(res => {
@@ -83,46 +88,49 @@ const Home = () => {
 							<Options />
 						</select>
 					</form>
-					{isLoading ? (
-						<div className="pt-3">
-							Loading...
-							<img
-								src={loading}
-								width="25"
-								height="25"
-								alt="Loading placeholder"
-							/>
-						</div>
-					) : (
-						<div className="pt-3 mx-n2">
-							<InfiniteScroll
-								dataLength={pokemons.length}
-								next={fetchPokemon}
-								hasMore={
-									type === ""
-										? nextUrl
-										: pokemons.length <
-										  filteredPokemons.length
-								}
-								loader={<BottomText text="Loading..." />}
-								endMessage={
-									<BottomText text="Yay! You have seen it all" />
-								}
-							>
-								<Columned>
-									{pokemons.map((pokemon, i) => {
-										return (
-											<Card
-												key={i}
-												slug={pokemon.slug}
-												name={_.startCase(pokemon.slug)}
-											/>
-										)
-									})}
-								</Columned>
-							</InfiniteScroll>
-						</div>
-					)}
+					<div className="pt-3">
+						{isLoading ? (
+							<div>
+								Loading...&nbsp;
+								<SmallSpinner />
+							</div>
+						) : pokemons.length > 0 ? (
+							<div className="mx-n2">
+								<InfiniteScroll
+									dataLength={pokemons.length}
+									next={fetchPokemon}
+									hasMore={
+										type === ""
+											? nextUrl
+											: pokemons.length <
+											  filteredPokemons.length
+									}
+									loader={<BottomText text="Loading..." />}
+									endMessage={
+										<BottomText text="Yay! You have seen it all" />
+									}
+								>
+									<Columned>
+										{pokemons.map((pokemon, i) => {
+											return (
+												<Card
+													key={i}
+													slug={pokemon.slug}
+													name={_.startCase(
+														pokemon.slug
+													)}
+												/>
+											)
+										})}
+									</Columned>
+								</InfiniteScroll>
+							</div>
+						) : (
+							<div className="alert alert-danger" role="alert">
+								Nothing found
+							</div>
+						)}
+					</div>
 				</div>
 			</main>
 		</div>
