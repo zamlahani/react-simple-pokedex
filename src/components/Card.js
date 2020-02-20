@@ -20,7 +20,7 @@ function Card(props) {
 		return () => {
 			source.cancel(`Component ${props.slug} unmounted`)
 		}
-	}, [props.slug])
+	}, [])
 	return (
 		<div className="card">
 			<img src={image} className="mx-auto d-block" alt="" />
