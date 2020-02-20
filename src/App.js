@@ -12,7 +12,7 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/detail/">
+        <Route path="/:pokemonSlug/">
           <Detail />
         </Route>
         <Route exact path="/">

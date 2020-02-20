@@ -4,12 +4,13 @@ import _ from "lodash"
 import Card from "../components/Card"
 import Header from "../components/Header"
 import Option from "../components/Option"
+import loading from "../loading-image.svg"
 
 const Home = () => {
 	const [options, setOptions] = useState([{ label: "All", value: "" }])
 	const [pokemons, setPokemons] = useState([])
 	const [type, setType] = useState("")
-	const [loading, setLoading] = useState(true)
+	const [isLoading, setLoading] = useState(true)
 	const Options = () => {
 		return options.map((option, i) => {
 			return <Option key={i} value={option.value} label={option.label} />
@@ -38,7 +39,6 @@ const Home = () => {
 		setLoading(true)
 		if (type !== "") {
 			axios.get(`https://pokeapi.co/api/v2/type/${type}`).then(res => {
-				console.log("1st then")
 				let retreivedPokemons = res.data.pokemon.map(pokemon => {
 					return { slug: pokemon.pokemon.name }
 				})
@@ -76,9 +76,21 @@ const Home = () => {
 							<Options />
 						</select>
 					</form>
-					<div className="card-columns pt-3">
-						{loading ? "Loading..." : <Cards />}
-					</div>
+					{isLoading ? (
+						<div className="pt-3">
+							Loading...
+							<img
+								src={loading}
+								width="25"
+								height="25"
+								alt="Loading placeholder"
+							/>
+						</div>
+					) : (
+						<div className="card-columns pt-3">
+							<Cards />
+						</div>
+					)}
 				</div>
 			</main>
 		</div>
