@@ -47,8 +47,8 @@ const Home = () => {
 				let retreivedPokemons = res.data.pokemon.map(pokemon => {
 					return { slug: pokemon.pokemon.name }
 				})
-				setPokemons(retreivedPokemons.slice(0, 20))
 				setFilteredPokemons([...retreivedPokemons])
+				setPokemons(retreivedPokemons.slice(0, 20))
 				setLoading(false)
 			})
 		} else {
@@ -98,7 +98,16 @@ const Home = () => {
 							<InfiniteScroll
 								dataLength={pokemons.length}
 								next={fetchPokemon}
-								hasMore={true}
+								hasMore={
+									type === ""
+										? nextUrl
+										: pokemons.length <
+										  filteredPokemons.length
+								}
+								loader={<BottomText text="Loading..." />}
+								endMessage={
+									<BottomText text="Yay! You have seen it all" />
+								}
 							>
 								<Columned>
 									{pokemons.map((pokemon, i) => {
@@ -122,6 +131,14 @@ const Home = () => {
 
 function Option(props) {
 	return <option value={props.value}>{props.label}</option>
+}
+
+function BottomText(props) {
+	return (
+		<p style={{ textAlign: "center" }}>
+			<b>{props.text}</b>
+		</p>
+	)
 }
 
 export default Home
