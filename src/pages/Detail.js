@@ -13,12 +13,6 @@ const Detail = () => {
 	const [abilitiesString, setAbilities] = useState("")
 	const [typesString, setTypesString] = useState("")
 
-	const Stats = () => {
-		return pokemon.stats.map((val, i) => {
-			return <Stat key={i} name={val.stat.name} stat={val.base_stat} />
-		})
-	}
-
 	useEffect(() => {
 		const source = axios.CancelToken.source()
 		axios
@@ -81,7 +75,15 @@ const Detail = () => {
 							</div>
 							<div className="col-sm pt-3">
 								<h2 className="h5">Stats</h2>
-								<Stats />
+								{pokemon.stats.map((val, i) => {
+									return (
+										<Stat
+											key={i}
+											name={val.stat.name}
+											stat={val.base_stat}
+										/>
+									)
+								})}
 							</div>
 						</div>
 					</div>
