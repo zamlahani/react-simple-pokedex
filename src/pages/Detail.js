@@ -49,7 +49,7 @@ const Detail = () => {
 		<div>
 			<Header />
 			<main className="container">
-				<img src={image} alt="" />
+				<img src={image} alt="" className="d-block mx-auto" />
 				{_.isEmpty(pokemon) ? (
 					<div className="pt-3">
 						Loading...

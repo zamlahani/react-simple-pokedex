@@ -3,7 +3,6 @@ import axios from "axios"
 import _ from "lodash"
 import Card from "../components/Card"
 import Header from "../components/Header"
-import Option from "../components/Option"
 import loading from "../loading-image.svg"
 
 const Home = () => {
@@ -95,6 +94,10 @@ const Home = () => {
 			</main>
 		</div>
 	)
+}
+
+function Option(props) {
+	return <option value={props.value}>{props.label}</option>
 }
 
 export default Home
