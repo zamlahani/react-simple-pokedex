@@ -6,6 +6,7 @@ import BigSpinner from "../components/BigSpinner"
 
 function Card(props) {
 	const [image, setImage] = useState("")
+
 	useEffect(() => {
 		const source = axios.CancelToken.source()
 		axios
@@ -20,6 +21,7 @@ function Card(props) {
 			source.cancel(`Component ${props.slug} unmounted`)
 		}
 	}, [])
+
 	return (
 		<div className="m-2">
 			<div className="card" style={props.style}>

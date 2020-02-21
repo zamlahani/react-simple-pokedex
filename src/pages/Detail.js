@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react"
 import axios from "axios"
 import _ from "lodash"
-import { useParams } from "react-router-dom"
+import { useParams, useHistory } from "react-router-dom"
 import Header from "../components/Header"
 import SmallSpinner from "../components/SmallSpinner"
 import BigSpinner from "../components/BigSpinner"
 
 const Detail = () => {
-	let { pokemonSlug } = useParams()
+	const { pokemonSlug } = useParams()
+	const history = useHistory()
 	const [image, setImage] = useState("")
 	const [pokemon, setPokemon] = useState({})
 	const [abilitiesString, setAbilities] = useState("")
@@ -35,11 +36,16 @@ const Detail = () => {
 					setTypesString(typs => typs + _.startCase(val.type.name))
 				})
 			})
-			.catch(function(error) {})
+			.catch(function(error) {
+				if (error.response.status === 404) {
+					history.push("/")
+				}
+			})
 		return () => {
 			source.cancel(`Exit from the ${pokemonSlug} page`)
 		}
 	}, [])
+
 	return (
 		<div>
 			<Header />

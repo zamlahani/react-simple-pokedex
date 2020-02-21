@@ -28,6 +28,7 @@ const Home = () => {
 			setPokemons(poks => filteredPokemons.slice(0, 20 + poks.length))
 		}
 	}
+
 	useEffect(() => {
 		axios.get("https://pokeapi.co/api/v2/type").then(res => {
 			let newOptions = res.data.results.map(val => {
@@ -36,6 +37,7 @@ const Home = () => {
 			setOptions(o => [...o, ...newOptions])
 		})
 	}, [])
+
 	useEffect(() => {
 		setLoading(true)
 		if (type !== "") {
@@ -63,9 +65,11 @@ const Home = () => {
 			})
 		}
 	}, [type])
+
 	const handleSelect = e => {
 		setType(e.target.value)
 	}
+
 	return (
 		<div className="homePage">
 			<Header />
